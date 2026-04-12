@@ -1,0 +1,22 @@
+x-udatracker-common:
+  &udatracker-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  image: udatracker:latest
+  container_name: udatracker
+  working_dir: /app
+  volumes:
+    - ./src:/app/src
+    - ./docs:/app/docs
+  environment:
+    - PYTHONPATH=/app/src
+    - TZ=America/Sao_Paulo
+  stdin_open: true
+  tty: true
+
+services:
+  udatracker:
+    <<: *udatracker-common
+    ports:
+      - "5000:5000"
