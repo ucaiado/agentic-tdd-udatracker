@@ -45,3 +45,13 @@ def test_add_order_raises_error_if_exists(order_tracker, mock_storage):
 
     with pytest.raises(ValueError, match="Order with ID 'ORD_EXISTING' already exists."):
         order_tracker.add_order("ORD_EXISTING", "New Item", 1, "CUST001")
+
+
+@pytest.mark.learner
+@pytest.mark.parametrize("quantity", [0, -1])
+def test_add_order_rejects_non_positive_quantity(order_tracker, mock_storage, quantity):
+    """Tests that adding an order with quantity <= 0 raises a ValueError."""
+    with pytest.raises(ValueError, match="quantity"):
+        order_tracker.add_order("ORD002", "Laptop", quantity, "CUST001")
+
+    mock_storage.save_order.assert_not_called()
