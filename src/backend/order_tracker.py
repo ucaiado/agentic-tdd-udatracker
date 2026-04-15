@@ -14,6 +14,8 @@ class OrderTracker:
         self.storage = storage
 
     def add_order(self, order_id: str, item_name: str, quantity: int, customer_id: str, status: str = "pending"):
+        if quantity <= 0:
+            raise ValueError(f"Invalid quantity '{quantity}': must be a positive integer.")
         if self.storage.get_order(order_id) is not None:
             raise ValueError(f"Order with ID '{order_id}' already exists.")
         order = {
