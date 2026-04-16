@@ -29,3 +29,6 @@ test-api:  ## Run API integration tests
 
 test-all:  ## Run the full test suite
 	docker-compose run --rm udatracker bash -c "cd /app/src && pytest -vv"
+
+smoke-api:  ## Run curl smoke script (requires app running)
+	bash scripts/smoke_api.sh
