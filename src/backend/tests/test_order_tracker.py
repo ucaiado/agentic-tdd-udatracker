@@ -159,3 +159,12 @@ def test_update_order_status_raises_for_nonexistent_order(order_tracker, mock_st
     """Tests that updating a non-existent order raises ValueError."""
     with pytest.raises(ValueError, match="not found"):
         order_tracker.update_order_status("NONEXISTENT", "shipped")
+
+
+@pytest.mark.learner
+def test_update_order_status_rejects_empty_order_id(order_tracker, mock_storage):
+    """Tests that update_order_status raises ValueError for empty order_id."""
+    with pytest.raises(ValueError, match="order_id"):
+        order_tracker.update_order_status("", "shipped")
+
+    mock_storage.get_order.assert_not_called()
