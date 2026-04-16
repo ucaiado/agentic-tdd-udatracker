@@ -39,6 +39,8 @@ class OrderTracker:
         return self.storage.get_order(order_id)
 
     def update_order_status(self, order_id: str, new_status: str):
+        if not order_id:
+            raise ValueError("Field 'order_id' must be a non-empty string.")
         valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
         if new_status not in valid_statuses:
             raise ValueError(f"Invalid status '{new_status}': must be one of {sorted(valid_statuses)}.")
