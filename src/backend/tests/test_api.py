@@ -57,3 +57,15 @@ def test_list_orders_by_status_api_matching(client):
     assert response.status_code == 200
     assert len(response.json) == 1
     assert response.json[0]['order_id'] == "S001"
+
+
+# --- Learner-authored error tests ---
+
+@pytest.mark.learner
+def test_add_order_api_duplicate_returns_409(client):
+    """Tests that posting a duplicate order_id returns 409."""
+    order_data = {"order_id": "DUP001", "item_name": "Laptop", "quantity": 1, "customer_id": "C1"}
+    client.post('/api/orders', json=order_data)
+    response = client.post('/api/orders', json=order_data)
+    assert response.status_code == 409
+    assert "error" in response.json
