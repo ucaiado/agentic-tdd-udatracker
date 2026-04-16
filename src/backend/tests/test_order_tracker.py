@@ -88,6 +88,15 @@ def test_get_order_by_id_returns_existing_order(order_tracker, mock_storage):
 
 
 @pytest.mark.learner
+def test_get_order_by_id_returns_none_when_not_found(order_tracker, mock_storage):
+    """Tests that get_order_by_id returns None for a non-existent order."""
+    result = order_tracker.get_order_by_id("NONEXISTENT")
+
+    mock_storage.get_order.assert_called_once_with("NONEXISTENT")
+    assert result is None
+
+
+@pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
     ("ORD003", "", "CUST001"),
