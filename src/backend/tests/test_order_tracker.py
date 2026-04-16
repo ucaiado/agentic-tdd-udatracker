@@ -142,3 +142,13 @@ def test_update_order_status_happy_path(order_tracker, mock_storage):
     mock_storage.save_order.assert_called_once()
     saved_order = mock_storage.save_order.call_args[0][1]
     assert saved_order["status"] == "shipped"
+
+
+@pytest.mark.learner
+@pytest.mark.parametrize("bad_status", ["unknown", "ready", ""])
+def test_update_order_status_rejects_invalid_status(order_tracker, mock_storage, bad_status):
+    """Tests that an invalid new_status raises ValueError before reading storage."""
+    with pytest.raises(ValueError, match="status"):
+        order_tracker.update_order_status("ORD001", bad_status)
+
+    mock_storage.get_order.assert_not_called()
