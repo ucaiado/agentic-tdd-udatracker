@@ -19,6 +19,9 @@ class OrderTracker:
                 raise ValueError(f"Field '{name}' must be a non-empty string.")
         if quantity <= 0:
             raise ValueError(f"Invalid quantity '{quantity}': must be a positive integer.")
+        valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
+        if status not in valid_statuses:
+            raise ValueError(f"Invalid status '{status}': must be one of {sorted(valid_statuses)}.")
         if self.storage.get_order(order_id) is not None:
             raise ValueError(f"Order with ID '{order_id}' already exists.")
         order = {
