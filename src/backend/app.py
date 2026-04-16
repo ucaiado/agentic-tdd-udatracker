@@ -48,7 +48,14 @@ def update_order_status_api(order_id):
 
 @app.route('/api/orders', methods=['GET'])
 def list_orders_api():
-    orders = order_tracker.list_all_orders()
+    status = request.args.get("status")
+    if status:
+        try:
+            orders = order_tracker.list_orders_by_status(status)
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
+    else:
+        orders = order_tracker.list_all_orders()
     return jsonify(orders), 200
 
 if __name__ == '__main__':
