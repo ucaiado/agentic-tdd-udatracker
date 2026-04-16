@@ -26,6 +26,7 @@ Claude Code acting as an AI pair programmer.
   learner during TDD cycles; fixtures already provided)
 - `src/backend/tests/test_api.py` — **integration tests** (pre-written; do
   not modify)
+- `scripts/smoke_api.sh` — curl-based API smoke test for end-to-end verification
 
 ### Public Interface of `OrderTracker`
 
@@ -68,7 +69,7 @@ The loop is:
 
 - `test: <message>` — adds a failing test (RED)
 - `feat: <message>` — implements code to make the test pass (GREEN)
-- `refactor: <message>` — restructures without behavior change (only when all
+- `refact: <message>` — restructures without behavior change (only when all
   tests pass)
 - `chore: <message>` — tooling, docs, CI
 - One commit per TDD cycle is preferred so the history reads as a sequence of
@@ -82,6 +83,7 @@ Run from repo root:
 make test-unit     # OrderTracker unit tests
 make test-api      # API integration tests
 make test-all      # Full suite
+make smoke-api     # Curl smoke script against a running app
 ```
 
 All commands use Docker (`docker-compose run --rm udatracker ...`). Do not
