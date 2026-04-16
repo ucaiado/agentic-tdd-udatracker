@@ -132,6 +132,24 @@ def test_list_all_orders_returns_empty_list_when_no_orders(order_tracker, mock_s
     assert result == []
 
 
+# --- list_orders_by_status ---
+
+@pytest.mark.learner
+def test_list_orders_by_status_filters_correctly(order_tracker, mock_storage):
+    """Tests that list_orders_by_status returns only orders matching the status."""
+    orders = {
+        "ORD001": {"order_id": "ORD001", "item_name": "Laptop", "quantity": 1, "customer_id": "CUST001", "status": "pending"},
+        "ORD002": {"order_id": "ORD002", "item_name": "Mouse", "quantity": 2, "customer_id": "CUST002", "status": "shipped"},
+        "ORD003": {"order_id": "ORD003", "item_name": "Keyboard", "quantity": 1, "customer_id": "CUST003", "status": "pending"},
+    }
+    mock_storage.get_all_orders.return_value = orders
+
+    result = order_tracker.list_orders_by_status("pending")
+
+    assert len(result) == 2
+    assert all(o["status"] == "pending" for o in result)
+
+
 @pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
