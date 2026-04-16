@@ -97,6 +97,15 @@ def test_get_order_by_id_returns_none_when_not_found(order_tracker, mock_storage
 
 
 @pytest.mark.learner
+def test_get_order_by_id_rejects_empty_id(order_tracker, mock_storage):
+    """Tests that get_order_by_id raises ValueError for empty order_id."""
+    with pytest.raises(ValueError, match="order_id"):
+        order_tracker.get_order_by_id("")
+
+    mock_storage.get_order.assert_not_called()
+
+
+@pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
     ("ORD003", "", "CUST001"),
