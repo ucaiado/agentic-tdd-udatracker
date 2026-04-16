@@ -17,13 +17,19 @@ def serve_static(filename):
 @app.route('/api/orders', methods=['POST'])
 def add_order_api():
     data = request.get_json()
-    order_tracker.add_order(
-        order_id=data["order_id"],
-        item_name=data["item_name"],
-        quantity=data["quantity"],
-        customer_id=data["customer_id"],
-        status=data.get("status", "pending"),
-    )
+    try:
+        order_tracker.add_order(
+            order_id=data["order_id"],
+            item_name=data["item_name"],
+            quantity=data["quantity"],
+            customer_id=data["customer_id"],
+            status=data.get("status", "pending"),
+        )
+    except ValueError as e:
+        msg = str(e)
+        if "already exists" in msg:
+            return jsonify({"error": msg}), 409
+        return jsonify({"error": msg}), 400
     order = order_tracker.get_order_by_id(data["order_id"])
     return jsonify(order), 201
 
