@@ -55,4 +55,4 @@ class OrderTracker:
         return list(self.storage.get_all_orders().values())
 
     def list_orders_by_status(self, status: str):
-        pass
+        return [o for o in self.storage.get_all_orders().values() if o["status"] == status]
