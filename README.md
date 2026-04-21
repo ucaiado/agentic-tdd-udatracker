@@ -60,7 +60,6 @@ agentic-tdd-udatracker/
 │   │   ├── order_tracker.py        # Core business logic
 │   │   ├── in_memory_storage.py    # In-memory storage backend
 │   │   ├── requirements.txt
-│   │   ├── README.md               # Design reflection and next steps
 │   │   └── tests/
 │   │       ├── test_order_tracker.py   # Unit tests for OrderTracker
 │   │       └── test_api.py             # Integration tests for API endpoints
@@ -68,6 +67,7 @@ agentic-tdd-udatracker/
 │   │   ├── index.html
 │   │   ├── css/style.css
 │   │   └── js/script.js
+│   ├── README.md                   # Design reflection and next steps
 │   └── pytest.ini
 ├── scripts/
 │   └── smoke_api.sh                # Curl-based API smoke test
@@ -84,7 +84,7 @@ agentic-tdd-udatracker/
 ### Reflection
 
 A short write-up of design decisions, testing insights, and next steps lives
-in [`src/backend/README.md`](src/backend/README.md).
+in [`src/README.md`](src/README.md).
 
 
 ### License
