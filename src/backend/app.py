@@ -24,13 +24,15 @@ def serve_static(filename):
 @app.route("/api/orders", methods=["POST"])
 def add_order_api():
     """Create a new order from JSON payload."""
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be valid JSON."}), 400
     try:
         order_tracker.add_order(
-            order_id=data["order_id"],
-            item_name=data["item_name"],
-            quantity=data["quantity"],
-            customer_id=data["customer_id"],
+            order_id=data.get("order_id", ""),
+            item_name=data.get("item_name", ""),
+            quantity=data.get("quantity", 0),
+            customer_id=data.get("customer_id", ""),
             status=data.get("status", "pending"),
         )
     except ValueError as e:
@@ -54,9 +56,11 @@ def get_order_api(order_id):
 @app.route("/api/orders/<string:order_id>/status", methods=["PUT"])
 def update_order_status_api(order_id):
     """Update the status of an existing order."""
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be valid JSON."}), 400
     try:
-        updated = order_tracker.update_order_status(order_id, data["new_status"])
+        updated = order_tracker.update_order_status(order_id, data.get("new_status", ""))
     except ValueError as e:
         msg = str(e)
         if "not found" in msg:
