@@ -14,6 +14,9 @@ class OrderTracker:
         self.storage = storage
 
     def add_order(self, order_id: str, item_name: str, quantity: int, customer_id: str, status: str = "pending"):
+        for name, value in (("order_id", order_id), ("item_name", item_name), ("customer_id", customer_id)):
+            if not value:
+                raise ValueError(f"Field '{name}' must be a non-empty string.")
         if quantity <= 0:
             raise ValueError(f"Invalid quantity '{quantity}': must be a positive integer.")
         if self.storage.get_order(order_id) is not None:
