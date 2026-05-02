@@ -6,6 +6,8 @@ class OrderTracker:
     Manages customer orders, providing functionalities to add, update,
     and retrieve order information.
     """
+    VALID_STATUSES = {"pending", "processing", "shipped", "delivered", "cancelled"}
+
     def __init__(self, storage):
         required_methods = ['save_order', 'get_order', 'get_all_orders']
         for method in required_methods:
@@ -13,15 +15,21 @@ class OrderTracker:
                 raise TypeError(f"Storage object must implement a callable '{method}' method.")
         self.storage = storage
 
+    def _validate_status(self, status: str):
+        if status not in self.VALID_STATUSES:
+            raise ValueError(f"Invalid status '{status}': must be one of {sorted(self.VALID_STATUSES)}.")
+
+    def _require_order_id(self, order_id: str):
+        if not order_id:
+            raise ValueError("Field 'order_id' must be a non-empty string.")
+
     def add_order(self, order_id: str, item_name: str, quantity: int, customer_id: str, status: str = "pending"):
         for name, value in (("order_id", order_id), ("item_name", item_name), ("customer_id", customer_id)):
             if not value:
                 raise ValueError(f"Field '{name}' must be a non-empty string.")
         if quantity <= 0:
             raise ValueError(f"Invalid quantity '{quantity}': must be a positive integer.")
-        valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
-        if status not in valid_statuses:
-            raise ValueError(f"Invalid status '{status}': must be one of {sorted(valid_statuses)}.")
+        self._validate_status(status)
         if self.storage.get_order(order_id) is not None:
             raise ValueError(f"Order with ID '{order_id}' already exists.")
         order = {
@@ -34,16 +42,12 @@ class OrderTracker:
         self.storage.save_order(order_id, order)
 
     def get_order_by_id(self, order_id: str):
-        if not order_id:
-            raise ValueError("Field 'order_id' must be a non-empty string.")
+        self._require_order_id(order_id)
         return self.storage.get_order(order_id)
 
     def update_order_status(self, order_id: str, new_status: str):
-        if not order_id:
-            raise ValueError("Field 'order_id' must be a non-empty string.")
-        valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
-        if new_status not in valid_statuses:
-            raise ValueError(f"Invalid status '{new_status}': must be one of {sorted(valid_statuses)}.")
+        self._require_order_id(order_id)
+        self._validate_status(new_status)
         order = self.storage.get_order(order_id)
         if order is None:
             raise ValueError(f"Order with ID '{order_id}' not found.")
@@ -55,7 +59,5 @@ class OrderTracker:
         return list(self.storage.get_all_orders().values())
 
     def list_orders_by_status(self, status: str):
-        valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
-        if status not in valid_statuses:
-            raise ValueError(f"Invalid status '{status}': must be one of {sorted(valid_statuses)}.")
+        self._validate_status(status)
         return [o for o in self.storage.get_all_orders().values() if o["status"] == status]
