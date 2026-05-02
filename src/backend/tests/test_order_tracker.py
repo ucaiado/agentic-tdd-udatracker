@@ -152,3 +152,10 @@ def test_update_order_status_rejects_invalid_status(order_tracker, mock_storage,
         order_tracker.update_order_status("ORD001", bad_status)
 
     mock_storage.get_order.assert_not_called()
+
+
+@pytest.mark.learner
+def test_update_order_status_raises_for_nonexistent_order(order_tracker, mock_storage):
+    """Tests that updating a non-existent order raises ValueError."""
+    with pytest.raises(ValueError, match="not found"):
+        order_tracker.update_order_status("NONEXISTENT", "shipped")
