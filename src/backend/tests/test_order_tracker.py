@@ -58,6 +58,16 @@ def test_add_order_rejects_non_positive_quantity(order_tracker, mock_storage, qu
 
 
 @pytest.mark.learner
+@pytest.mark.parametrize("bad_status", ["unknown", "ready", ""])
+def test_add_order_rejects_invalid_initial_status(order_tracker, mock_storage, bad_status):
+    """Tests that an invalid initial status raises ValueError."""
+    with pytest.raises(ValueError, match="status"):
+        order_tracker.add_order("ORD004", "Laptop", 1, "CUST001", status=bad_status)
+
+    mock_storage.save_order.assert_not_called()
+
+
+@pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
     ("ORD003", "", "CUST001"),
