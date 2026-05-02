@@ -39,6 +39,9 @@ class OrderTracker:
         return self.storage.get_order(order_id)
 
     def update_order_status(self, order_id: str, new_status: str):
+        valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
+        if new_status not in valid_statuses:
+            raise ValueError(f"Invalid status '{new_status}': must be one of {sorted(valid_statuses)}.")
         order = self.storage.get_order(order_id)
         if order is None:
             raise ValueError(f"Order with ID '{order_id}' not found.")
