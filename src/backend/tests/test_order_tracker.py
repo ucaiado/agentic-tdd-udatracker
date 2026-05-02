@@ -67,6 +67,26 @@ def test_add_order_rejects_invalid_initial_status(order_tracker, mock_storage, b
     mock_storage.save_order.assert_not_called()
 
 
+# --- get_order_by_id ---
+
+@pytest.mark.learner
+def test_get_order_by_id_returns_existing_order(order_tracker, mock_storage):
+    """Tests that get_order_by_id returns the order dict when it exists."""
+    stored_order = {
+        "order_id": "ORD001",
+        "item_name": "Laptop",
+        "quantity": 1,
+        "customer_id": "CUST001",
+        "status": "pending",
+    }
+    mock_storage.get_order.return_value = stored_order
+
+    result = order_tracker.get_order_by_id("ORD001")
+
+    mock_storage.get_order.assert_called_once_with("ORD001")
+    assert result == stored_order
+
+
 @pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
