@@ -55,4 +55,7 @@ class OrderTracker:
         return list(self.storage.get_all_orders().values())
 
     def list_orders_by_status(self, status: str):
+        valid_statuses = {"pending", "processing", "shipped", "delivered", "cancelled"}
+        if status not in valid_statuses:
+            raise ValueError(f"Invalid status '{status}': must be one of {sorted(valid_statuses)}.")
         return [o for o in self.storage.get_all_orders().values() if o["status"] == status]
