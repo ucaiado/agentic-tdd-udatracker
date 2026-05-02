@@ -125,6 +125,14 @@ def test_list_all_orders_returns_all(order_tracker, mock_storage):
 
 
 @pytest.mark.learner
+def test_list_all_orders_returns_empty_list_when_no_orders(order_tracker, mock_storage):
+    """Tests that list_all_orders returns an empty list when storage is empty."""
+    result = order_tracker.list_all_orders()
+
+    assert result == []
+
+
+@pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
     ("ORD003", "", "CUST001"),
