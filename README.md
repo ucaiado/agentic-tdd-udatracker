@@ -11,8 +11,15 @@ The project covers two layers of implementation driven entirely by a pre-existin
 - **OrderTracker**: core business logic for adding, retrieving, and updating orders
 - **REST API**: Flask endpoints that expose the OrderTracker to the frontend
 
-The `.ai/` directory documents the AI collaboration workflow, including the TDD
- skill used to guide each red-green-refactor cycle.
+Three files document how the project was built. `.ai/CLAUDE.md` holds the
+ workflow contract for the repo and the guardrails (what Claude can and cannot
+ touch). `.ai/skills/tdd.md` is a self-contained skill that guides the
+ red-green-refactor loop without depending on any personal setup. The commit
+ log is organized to mirror the TDD cycle, with `test` commits introducing a
+ failing test, `feat` commits adding the minimal code to make it pass, and
+ `refact` commits extracting shared structure when real duplication appeared.
+ Running `git log --reverse --oneline` replays the full trajectory one cycle
+ at a time.
 
 
 ### Install
@@ -40,6 +47,7 @@ $ make run-app      # Access at http://localhost:5000
 $ make test-unit    # Run OrderTracker unit tests
 $ make test-api     # Run API integration tests
 $ make test-all     # Run the full test suite
+$ make smoke-api    # Run curl smoke script against a running app
 ```
 
 
@@ -52,6 +60,7 @@ agentic-tdd-udatracker/
 │   │   ├── order_tracker.py        # Core business logic
 │   │   ├── in_memory_storage.py    # In-memory storage backend
 │   │   ├── requirements.txt
+│   │   ├── README.md               # Design reflection and next steps
 │   │   └── tests/
 │   │       ├── test_order_tracker.py   # Unit tests for OrderTracker
 │   │       └── test_api.py             # Integration tests for API endpoints
@@ -60,6 +69,8 @@ agentic-tdd-udatracker/
 │   │   ├── css/style.css
 │   │   └── js/script.js
 │   └── pytest.ini
+├── scripts/
+│   └── smoke_api.sh                # Curl-based API smoke test
 ├── .ai/
 │   ├── CLAUDE.md                   # Project context and AI workflow instructions
 │   └── skills/
@@ -68,6 +79,12 @@ agentic-tdd-udatracker/
 ├── Dockerfile & docker-compose.yml
 └── Makefile                        # Automation commands
 ```
+
+
+### Reflection
+
+A short write-up of design decisions, testing insights, and next steps lives
+in [`src/backend/README.md`](src/backend/README.md).
 
 
 ### License
