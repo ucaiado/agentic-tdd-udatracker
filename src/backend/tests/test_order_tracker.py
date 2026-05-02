@@ -119,3 +119,26 @@ def test_add_order_rejects_empty_required_field(
         order_tracker.add_order(order_id, item_name, 1, customer_id)
 
     mock_storage.save_order.assert_not_called()
+
+
+# --- update_order_status ---
+
+@pytest.mark.learner
+def test_update_order_status_happy_path(order_tracker, mock_storage):
+    """Tests that update_order_status changes and persists the new status."""
+    existing_order = {
+        "order_id": "ORD001",
+        "item_name": "Laptop",
+        "quantity": 1,
+        "customer_id": "CUST001",
+        "status": "pending",
+    }
+    mock_storage.get_order.return_value = existing_order
+
+    result = order_tracker.update_order_status("ORD001", "shipped")
+
+    assert result["status"] == "shipped"
+    assert result["order_id"] == "ORD001"
+    mock_storage.save_order.assert_called_once()
+    saved_order = mock_storage.save_order.call_args[0][1]
+    assert saved_order["status"] == "shipped"
