@@ -69,3 +69,16 @@ def test_add_order_api_duplicate_returns_409(client):
     response = client.post('/api/orders', json=order_data)
     assert response.status_code == 409
     assert "error" in response.json
+
+
+@pytest.mark.learner
+@pytest.mark.parametrize("payload", [
+    {"order_id": "V001", "item_name": "Laptop", "quantity": 0, "customer_id": "C1"},
+    {"order_id": "V001", "item_name": "Laptop", "quantity": 1, "customer_id": "C1", "status": "invalid"},
+    {"order_id": "", "item_name": "Laptop", "quantity": 1, "customer_id": "C1"},
+])
+def test_add_order_api_invalid_payload_returns_400(client, payload):
+    """Tests that invalid payloads return 400."""
+    response = client.post('/api/orders', json=payload)
+    assert response.status_code == 400
+    assert "error" in response.json
