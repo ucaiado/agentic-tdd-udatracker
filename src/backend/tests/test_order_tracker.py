@@ -55,3 +55,19 @@ def test_add_order_rejects_non_positive_quantity(order_tracker, mock_storage, qu
         order_tracker.add_order("ORD002", "Laptop", quantity, "CUST001")
 
     mock_storage.save_order.assert_not_called()
+
+
+@pytest.mark.learner
+@pytest.mark.parametrize("order_id,item_name,customer_id", [
+    ("", "Laptop", "CUST001"),
+    ("ORD003", "", "CUST001"),
+    ("ORD003", "Laptop", ""),
+])
+def test_add_order_rejects_empty_required_field(
+    order_tracker, mock_storage, order_id, item_name, customer_id
+):
+    """Tests that empty required string fields raise ValueError."""
+    with pytest.raises(ValueError):
+        order_tracker.add_order(order_id, item_name, 1, customer_id)
+
+    mock_storage.save_order.assert_not_called()
