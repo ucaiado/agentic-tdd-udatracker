@@ -105,6 +105,25 @@ def test_get_order_by_id_rejects_empty_id(order_tracker, mock_storage):
     mock_storage.get_order.assert_not_called()
 
 
+# --- list_all_orders ---
+
+@pytest.mark.learner
+def test_list_all_orders_returns_all(order_tracker, mock_storage):
+    """Tests that list_all_orders returns a list of all stored orders."""
+    orders = {
+        "ORD001": {"order_id": "ORD001", "item_name": "Laptop", "quantity": 1, "customer_id": "CUST001", "status": "pending"},
+        "ORD002": {"order_id": "ORD002", "item_name": "Mouse", "quantity": 2, "customer_id": "CUST002", "status": "shipped"},
+    }
+    mock_storage.get_all_orders.return_value = orders
+
+    result = order_tracker.list_all_orders()
+
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert orders["ORD001"] in result
+    assert orders["ORD002"] in result
+
+
 @pytest.mark.learner
 @pytest.mark.parametrize("order_id,item_name,customer_id", [
     ("", "Laptop", "CUST001"),
