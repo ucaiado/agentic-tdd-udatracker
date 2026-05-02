@@ -33,8 +33,13 @@ def test_add_order_successfully(order_tracker, mock_storage):
     """Tests adding a new order with default 'pending' status."""
     order_tracker.add_order("ORD001", "Laptop", 1, "CUST001")
 
-    # We expect save_order to be called once
     mock_storage.save_order.assert_called_once()
+    saved_order = mock_storage.save_order.call_args[0][1]
+    assert saved_order["order_id"] == "ORD001"
+    assert saved_order["item_name"] == "Laptop"
+    assert saved_order["quantity"] == 1
+    assert saved_order["customer_id"] == "CUST001"
+    assert saved_order["status"] == "pending"
 
 
 @pytest.mark.learner
