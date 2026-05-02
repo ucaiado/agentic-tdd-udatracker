@@ -107,3 +107,20 @@ def test_list_orders_api_invalid_status_returns_400(client):
     response = client.get('/api/orders?status=invalid')
     assert response.status_code == 400
     assert "error" in response.json
+
+
+@pytest.mark.learner
+def test_add_order_api_missing_keys_returns_400(client):
+    """Tests that POST with missing required fields returns 400 with JSON error."""
+    response = client.post('/api/orders', json={"order_id": "X"})
+    assert response.status_code == 400
+    assert "error" in response.json
+
+
+@pytest.mark.learner
+def test_update_order_status_api_missing_new_status_returns_400(client):
+    """Tests that PUT without new_status key returns 400 with JSON error."""
+    client.post('/api/orders', json={"order_id": "UPD002", "item_name": "Laptop", "quantity": 1, "customer_id": "C1"})
+    response = client.put('/api/orders/UPD002/status', json={})
+    assert response.status_code == 400
+    assert "error" in response.json
